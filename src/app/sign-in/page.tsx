@@ -36,7 +36,7 @@ const loginSchema = z.object({
     })
 });
 
-const signIn = () => {
+const SignIn = () => {
 
     const router = useRouter()
 
@@ -204,4 +204,4 @@ const signIn = () => {
     )
 }
 
-export default signIn
+export default SignIn

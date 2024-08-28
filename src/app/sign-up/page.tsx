@@ -38,7 +38,7 @@ const registerSchema = z.object({
     })
 });
 
-const signUp = () => {
+const SignUp = () => {
 
     const router = useRouter()
 
@@ -167,4 +167,4 @@ const signUp = () => {
     )
 }
 
-export default signUp
+export default SignUp
