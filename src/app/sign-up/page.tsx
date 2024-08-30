@@ -53,7 +53,7 @@ const SignUp = () => {
 
     const onSubmit = async (values: z.infer<typeof registerSchema>) => {
         try {
-            const response: AxiosResponse = await axios.post("/auth/user/register", { values }, {
+            const response: AxiosResponse = await axios.post("/auth/sign-up", { values }, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -61,7 +61,7 @@ const SignUp = () => {
 
             const data = response.data;
             if (response.status === 201) {
-                toast.success(data.message || "Registration successful!", {
+                toast.success(data.message || "Sign-up successful!", {
                     duration: 1500
                 });
                 router.push("/sign-in");

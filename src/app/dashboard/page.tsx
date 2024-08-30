@@ -3,12 +3,37 @@
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { GearIcon, HamburgerMenuIcon, MagnifyingGlassIcon, HomeIcon, TokensIcon } from "@radix-ui/react-icons"
+import axios from "axios"
 import { useRouter } from "next/navigation"
 import React from "react"
+import { toast } from "sonner"
 
 const Dashboard = () => {
 
     const router = useRouter()
+
+    // Handle Sign-out
+    const handlelogout = async () => {
+        try {
+            await axios.get("/auth/sign-out")
+                .then((res) => {
+                    toast.success(res.data.message || "Sign out Successful!", {
+                        style: {
+                            "backgroundColor": "#D5F5E3",
+                            "color": "black",
+                            "border": "none"
+                        },
+                        duration: 1500
+                    });
+                    router.push("/sign-in");
+                })
+                .catch((error: any) => {
+                    console.log(error);
+                })
+        } catch (error: any) {
+            console.log(error);
+        }
+    };
 
     return (
         <React.Fragment>
@@ -32,7 +57,7 @@ const Dashboard = () => {
                         <Button
                             variant={'destructive'}
                             className=" bg-red-600 w-1/2 hover:bg-red-600"
-                            onClick={() => { }}
+                            onClick={handlelogout}
                         >
                             Sign Out
                         </Button>
@@ -83,7 +108,7 @@ const Dashboard = () => {
                                     <Button
                                         variant={'destructive'}
                                         className=" bg-red-600 w-1/2 hover:bg-red-600"
-                                        onClick={() => { }}
+                                        onClick={handlelogout}
                                     >
                                         Sign Out
                                     </Button>
@@ -93,8 +118,31 @@ const Dashboard = () => {
                     </div>
                 </section>
                 <section className=" absolute top-[10vh] left-0 h-[90vh] w-full flex justify-center items-center">
-                    <div className=" absolute left-0 top-0 w-1/4 h-[90vh] bg-green-100">
-
+                    <div className=" absolute left-0 top-0 w-1/5 h-[90vh] bg-gray-50 flex flex-col justify-start items-start">
+                        <Button
+                            variant={'link'}
+                            className=" w-fit gap-2 underline"
+                            onClick={() => { }}
+                        >
+                            <MagnifyingGlassIcon />
+                            Search
+                        </Button>
+                        <Button
+                            variant={'link'}
+                            className=" w-fit gap-2 underline"
+                            onClick={() => { router.push('/setting') }}
+                        >
+                            <GearIcon />
+                            Settings
+                        </Button>
+                        <Button
+                            variant={'link'}
+                            className=" w-fit gap-2 underline"
+                            onClick={() => { router.push('/') }}
+                        >
+                            <TokensIcon />
+                            New Page
+                        </Button>
                     </div>
                     <div>
 

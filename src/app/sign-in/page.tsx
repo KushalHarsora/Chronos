@@ -51,7 +51,7 @@ const SignIn = () => {
 
     const onSubmit = async (values: z.infer<typeof loginSchema>) => {
         try {
-            const response: AxiosResponse = await axios.post('/auth/user/login', { values }, {
+            const response: AxiosResponse = await axios.post('/auth/sign-in', { values }, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -59,7 +59,7 @@ const SignIn = () => {
             const data = response.data;
 
             if (response.status === 200) {
-                toast.success(data.message || "Login successful!", {
+                toast.success(data.message || "Sign-in successful!", {
                     style: {
                         "backgroundColor": "#D5F5E3",
                         "color": "black",
@@ -67,13 +67,6 @@ const SignIn = () => {
                     },
                     duration: 1500
                 });
-
-                const username = data.name.split(" ");
-                var name = "";
-
-                for (let i = 0; i < username.length; i++) {
-                    name += username[i];
-                }
 
                 router.push(`/dashboard`);
             }
