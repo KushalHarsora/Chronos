@@ -1,8 +1,8 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { ArrowRightIcon, GearIcon, HamburgerMenuIcon, MagnifyingGlassIcon, HomeIcon, TokensIcon } from "@radix-ui/react-icons"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { GearIcon, HamburgerMenuIcon, MagnifyingGlassIcon, HomeIcon, TokensIcon } from "@radix-ui/react-icons"
 import { useRouter } from "next/navigation"
 import React from "react"
 
@@ -14,7 +14,7 @@ const Dashboard = () => {
         <React.Fragment>
             <main className=" h-screen w-screen flex justify-center items-center">
                 {/* Navbar */}
-                <section className=" fixed z-0 h-[10vh] w-screen flex flex-row justify-between px-[10%] items-center border-b-[1.5px] bg-white/75 backdrop-blur-lg">
+                <section className=" fixed z-0 h-[10vh] w-screen top-0 left-0 flex flex-row justify-between px-[10%] items-center border-b-[1.5px] bg-white/75 backdrop-blur-lg">
                     <div>
                         <Button variant={'ghost'} onClick={() => { router.push('/') }} className=" font-mono font-semibold text-xl hover:bg-transparent">
                             Chronos.
@@ -22,16 +22,19 @@ const Dashboard = () => {
                     </div>
                     <div className=" flex flex-row max-lg:hidden">
                         <Button
-                            className=" mx-3"
-                            variant={'secondary'}
-                            onClick={() => { router.push('/sign-in') }}
-                        >Sign In</Button>
-                        <Button
-                            className=" mx-3 gap-2"
-                            onClick={() => { router.push('/sign-up') }}
+                            variant={'link'}
+                            className=" w-full gap-2 underline"
+                            onClick={() => { router.push('/dashboard') }}
                         >
-                            Getting Started
-                            <ArrowRightIcon />
+                            <HomeIcon />
+                            Dashboard
+                        </Button>
+                        <Button
+                            variant={'destructive'}
+                            className=" bg-red-600 w-1/2 hover:bg-red-600"
+                            onClick={() => { }}
+                        >
+                            Sign Out
                         </Button>
                     </div>
                     <div className=" lg:hidden">
@@ -44,10 +47,10 @@ const Dashboard = () => {
                             <SheetContent>
                                 <div className=" w-full h-full flex flex-col justify-between items-center overflow-hidden">
                                     <div className=" mt-[5vh] h-2/6 w-full flex flex-col justify-evenly items-center">
-                                    <Button
+                                        <Button
                                             variant={'link'}
                                             className=" w-full gap-2 underline"
-                                            onClick = {() => {}} 
+                                            onClick={() => { }}
                                         >
                                             <MagnifyingGlassIcon />
                                             Search
@@ -55,7 +58,7 @@ const Dashboard = () => {
                                         <Button
                                             variant={'link'}
                                             className=" w-full gap-2 underline"
-                                            onClick = {() => {router.push('/dashboard')}} 
+                                            onClick={() => { router.push('/dashboard') }}
                                         >
                                             <HomeIcon />
                                             Dashboard
@@ -63,7 +66,7 @@ const Dashboard = () => {
                                         <Button
                                             variant={'link'}
                                             className=" w-full gap-2 underline"
-                                            onClick = {() => {router.push('/setting')}} 
+                                            onClick={() => { router.push('/setting') }}
                                         >
                                             <GearIcon />
                                             Settings
@@ -71,7 +74,7 @@ const Dashboard = () => {
                                         <Button
                                             variant={'link'}
                                             className=" w-full gap-2 underline"
-                                            onClick = {() => {router.push('/')}} 
+                                            onClick={() => { router.push('/') }}
                                         >
                                             <TokensIcon />
                                             New Page
@@ -80,13 +83,21 @@ const Dashboard = () => {
                                     <Button
                                         variant={'destructive'}
                                         className=" bg-red-600 w-1/2 hover:bg-red-600"
-                                        onClick = {() => {}} 
+                                        onClick={() => { }}
                                     >
                                         Sign Out
                                     </Button>
                                 </div>
                             </SheetContent>
                         </Sheet>
+                    </div>
+                </section>
+                <section className=" absolute top-[10vh] left-0 h-[90vh] w-full flex justify-center items-center">
+                    <div className=" absolute left-0 top-0 w-1/4 h-[90vh] bg-green-100">
+
+                    </div>
+                    <div>
+
                     </div>
                 </section>
             </main>
