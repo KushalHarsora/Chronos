@@ -1,8 +1,9 @@
 'use client'
 
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { ArrowRightIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -20,7 +21,7 @@ export default function Home() {
             Chronos.
           </Button>
         </div>
-        <div className=" flex flex-row">
+        <div className=" flex flex-row max-lg:hidden">
           <Button
             className=" mx-3"
             variant={'secondary'}
@@ -33,6 +34,33 @@ export default function Home() {
             Getting Started
             <ArrowRightIcon />
           </Button>
+        </div>
+        <div className=" lg:hidden">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant={'ghost'} className=" hover:bg-transparent">
+                <HamburgerMenuIcon />
+              </Button>
+            </SheetTrigger>
+            <SheetContent>
+              <div className=" w-full h-full flex flex-col justify-between items-center overflow-hidden">
+                <div className=" mt-[5vh] h-[20vh] w-full flex flex-col justify-evenly items-center">
+                  <Button
+                    className=" mx-3 w-full"
+                    variant={'secondary'}
+                    onClick={() => { router.push('/sign-in') }}
+                  >Sign In</Button>
+                  <Button
+                    className=" mx-3 gap-2 w-full"
+                    onClick={() => { router.push('/sign-up') }}
+                  >
+                    Getting Started
+                    <ArrowRightIcon />
+                  </Button>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </section>
 

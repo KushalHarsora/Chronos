@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
-import { ArrowRightIcon } from "@radix-ui/react-icons"
+import { ArrowRightIcon, HamburgerMenuIcon } from "@radix-ui/react-icons"
 import { useRouter } from "next/navigation"
 import React from "react"
 import {
@@ -26,6 +26,7 @@ import Link from 'next/link';
 import axios, { AxiosResponse } from 'axios';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 const registerSchema = z.object({
     email: z.string().email().min(5, {
@@ -89,11 +90,11 @@ const SignUp = () => {
                 {/* Navbar */}
                 <nav className=" fixed z-10 h-[10vh] w-screen flex flex-row justify-between px-[10%] items-center border-b-[1px] bg-white/75 backdrop-blur-lg">
                     <div>
-                        <Button variant={'ghost'} onClick={() => {router.push('/')}} className=" font-mono font-semibold text-xl hover:bg-transparent">
+                        <Button variant={'ghost'} onClick={() => { router.push('/') }} className=" font-mono font-semibold text-xl hover:bg-transparent">
                             Chronos.
                         </Button>
                     </div>
-                    <div className=" flex flex-row">
+                    <div className=" flex flex-row max-lg:hidden">
                         <Button
                             className=" mx-3"
                             variant={'secondary'}
@@ -106,6 +107,33 @@ const SignUp = () => {
                             Getting Started
                             <ArrowRightIcon />
                         </Button>
+                    </div>
+                    <div className=" lg:hidden">
+                        <Sheet>
+                            <SheetTrigger asChild>
+                                <Button variant={'ghost'} className=" hover:bg-transparent">
+                                    <HamburgerMenuIcon />
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent>
+                                <div className=" w-full h-full flex flex-col justify-between items-center overflow-hidden">
+                                    <div className=" mt-[5vh] h-[20vh] w-full flex flex-col justify-evenly items-center">
+                                        <Button
+                                            className=" mx-3 w-full"
+                                            variant={'secondary'}
+                                            onClick={() => { router.push('/sign-in') }}
+                                        >Sign In</Button>
+                                        <Button
+                                            className=" mx-3 gap-2 w-full"
+                                            onClick={() => { router.push('/sign-up') }}
+                                        >
+                                            Getting Started
+                                            <ArrowRightIcon />
+                                        </Button>
+                                    </div>
+                                </div>
+                            </SheetContent>
+                        </Sheet>
                     </div>
                 </nav>
 
