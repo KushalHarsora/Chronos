@@ -29,6 +29,9 @@ import { toast } from 'sonner';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 const registerSchema = z.object({
+    username: z.string().min(2, {
+        message: "Username Needed"
+    }),
     email: z.string().email().min(5, {
         message: "Email Required"
     }),
@@ -46,6 +49,7 @@ const SignUp = () => {
     const form = useForm<z.infer<typeof registerSchema>>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
+            username: "",
             email: "",
             password: ""
         }
@@ -144,7 +148,20 @@ const SignUp = () => {
                         </CardHeader>
                         <CardContent>
                             <Form {...form}>
-                                <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-5'>
+                                <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-3'>
+                                    <FormField
+                                        control={form.control}
+                                        name='username'
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Username</FormLabel>
+                                                <FormControl>
+                                                    <Input type='text' placeholder='enter username' {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
                                     <FormField
                                         control={form.control}
                                         name='email'
