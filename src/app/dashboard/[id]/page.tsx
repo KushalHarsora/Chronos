@@ -19,7 +19,7 @@ import {
     FormLabel,
     FormMessage
 } from '@/components/ui/form';
-import { FramerLogoIcon, GearIcon } from "@radix-ui/react-icons"
+import { FramerLogoIcon, GearIcon, PlusCircledIcon } from "@radix-ui/react-icons"
 import axios from "axios"
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -28,9 +28,9 @@ import React, { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 
 const profileSchema = z.object({
-    email: z.string(),
     username: z.string()
 });
 
@@ -39,13 +39,13 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
     const form = useForm<z.infer<typeof profileSchema>>({
         resolver: zodResolver(profileSchema),
         defaultValues: {
-            email: "",
             username: ""
         }
     });
 
     const [name, setName] = useState<string>();
     const [email, setEmail] = useState<string>();
+    const [page, setPage] = useState<boolean>(false);
 
     useEffect(() => {
 
@@ -116,19 +116,6 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                                         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-5'>
                                             <FormField
                                                 control={form.control}
-                                                name='email'
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Email</FormLabel>
-                                                        <FormControl>
-                                                            <Input type='email' placeholder={email} {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                            <FormField
-                                                control={form.control}
                                                 name='username'
                                                 render={({ field }) => (
                                                     <FormItem>
@@ -163,7 +150,7 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                         <div className=" h-fit w-full flex justify-center items-center mb-10">
                             <Button
                                 variant={'destructive'}
-                                className=" text-base w-2/5"
+                                className=" text-base w-3/5"
                                 onClick={handlelogout}
                             >
                                 Sign out
@@ -172,7 +159,19 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                     </div>
                 </section>
                 <section className=" h-screen w-[85vw] absolute left-[15vw] top-0 bg-white">
-
+                        {page ? 
+                            <div className=" h-full w-full">
+                                Page Init
+                            </div>
+                            :
+                            <div className=" h-full w-full flex flex-col justify-center items-center">
+                                <Image src={'../page.svg'} height={400} width={500} priority alt={"page"} />
+                                <Button className=" gap-2 text-base py-4" variant={'default'} onClick={() => {setPage(!page)}}>
+                                    <PlusCircledIcon /> 
+                                    New Page                                    
+                                </Button>
+                            </div>    
+                        }
                 </section>
             </main>
         </React.Fragment>
