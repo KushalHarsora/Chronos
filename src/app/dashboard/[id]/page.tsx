@@ -19,8 +19,8 @@ import {
     FormLabel,
     FormMessage
 } from '@/components/ui/form';
-import { FramerLogoIcon, GearIcon, PlusCircledIcon } from "@radix-ui/react-icons"
-import axios from "axios"
+import { FramerLogoIcon, GearIcon, PlusCircledIcon, TrashIcon } from "@radix-ui/react-icons"
+import axios, { AxiosResponse } from "axios"
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from "next/navigation"
@@ -63,7 +63,44 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
 
     // handle form submit
     const onSubmit = async (values: z.infer<typeof profileSchema>) => {
-        console.log(values)
+        try {
+            const body = {values, email: email}
+            const response: AxiosResponse = await axios.post('/auth/user', body, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = response.data;
+        
+            if (response.status === 200) {
+                toast.success(data.message || "Update successful!", {
+                    style: {
+                        "backgroundColor": "#D5F5E3",
+                        "color": "black",
+                        "border": "none"
+                    },
+                    duration: 1500
+                });
+                setName(data.username);
+                form.reset();
+            }
+
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                const { status, data } = error.response;
+                console.log(status);
+                toast.error(data.error || "Some Error Occured", {
+                    style: {
+                        "backgroundColor": "#FADBD8",
+                        "color": "black",
+                        "border": "none"
+                    },
+                    duration: 2500
+                });
+                form.reset();
+            }
+        }
     }
 
     // Handle Sign-out
@@ -93,7 +130,7 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
         <React.Fragment>
             <main className=" h-screen w-screen flex justify-center items-center">
                 {/* Left Section */}
-                <section className=" h-screen w-[15vw] absolute left-0 top-0 bg-slate-50 flex flex-col justify-center items-center">
+                <section className=" h-screen w-1/4 absolute left-0 top-0 bg-slate-50 flex flex-col justify-center items-center">
                     <div className=" h-[10vh] w-full absolute top-0 left-0 flex justify-center items-center">
                         <Dialog>
                             <DialogTrigger asChild>
@@ -101,7 +138,7 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                                     <Avatar>
                                         <AvatarImage src="https://github.com/shadcn.png" alt="icon" />
                                     </Avatar>
-                                    {name !== undefined && name?.length > 8 ? name?.substring(0, 8) + "..." : name}
+                                    {name !== undefined && name?.length > 16 ? name?.substring(0, 16) + "..." : name}
                                 </Button>
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-[425px]">
@@ -111,9 +148,9 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                                         Make changes to your profile here. Click save when you&apos;re done.
                                     </DialogDescription>
                                 </DialogHeader>
-                                <div className="grid gap-4 py-4">
+                                <div className="grid gap-4 py-2">
                                     <Form {...form}>
-                                        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-5'>
+                                        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-3'>
                                             <FormField
                                                 control={form.control}
                                                 name='username'
@@ -127,24 +164,28 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                                                     </FormItem>
                                                 )}
                                             />
+                                            <DialogFooter>
+                                                <Button type="submit" variant={'default'}>Save changes</Button>
+                                            </DialogFooter>
                                         </form>
                                     </Form>
                                 </div>
-                                <DialogFooter>
-                                    <Button type="submit" variant={'default'}>Save changes</Button>
-                                </DialogFooter>
                             </DialogContent>
                         </Dialog>
                     </div>
                     <div className=" h-[90vh] w-full absolute top-[10vh] left-0 px-4 flex flex-col justify-between items-center">
-                        <div className=" h-fit w-full flex flex-col justify-start items-start gap-2 px-4 mt-4">
-                            <Button variant={'link'} onClick={() => { }} className=" font-mono font-medium text-base hover:bg-transparent underline gap-2">
+                        <div className=" h-fit w-full flex flex-col justify-start items-start px-6 gap-2 mt-4">
+                            <Button variant={'link'} onClick={() => setPage(true)} className=" font-mono font-medium text-base hover:bg-transparent underline gap-2">
                                 <FramerLogoIcon />
                                 New Page
                             </Button>
                             <Button variant={'link'} onClick={() => { }} className=" font-mono font-medium text-base hover:bg-transparent underline gap-2">
                                 <GearIcon />
                                 Setting
+                            </Button>
+                            <Button variant={'link'} onClick={() => { }} className=" font-mono font-medium text-base hover:bg-transparent underline gap-2">
+                                <TrashIcon />
+                                Trash
                             </Button>
                         </div>
                         <div className=" h-fit w-full flex justify-center items-center mb-10">
@@ -158,20 +199,20 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                         </div>
                     </div>
                 </section>
-                <section className=" h-screen w-[85vw] absolute left-[15vw] top-0 bg-white">
-                        {page ? 
-                            <div className=" h-full w-full">
-                                Page Init
-                            </div>
-                            :
-                            <div className=" h-full w-full flex flex-col justify-center items-center">
-                                <Image src={'../page.svg'} height={400} width={500} priority alt={"page"} />
-                                <Button className=" gap-2 text-base py-4" variant={'default'} onClick={() => {setPage(!page)}}>
-                                    <PlusCircledIcon /> 
-                                    New Page                                    
-                                </Button>
-                            </div>    
-                        }
+                <section className=" h-screen w-3/4 absolute left-1/4 top-0 bg-white">
+                    {page ?
+                        <div className=" h-full w-full">
+                            Page Init
+                        </div>
+                        :
+                        <div className=" h-full w-full flex flex-col justify-center items-center">
+                            <Image src={'../page.svg'} height={400} width={500} priority alt={"page"} />
+                            <Button className=" gap-2 text-base py-4" variant={'default'} onClick={() => { setPage(!page) }}>
+                                <PlusCircledIcon />
+                                New Page
+                            </Button>
+                        </div>
+                    }
                 </section>
             </main>
         </React.Fragment>

@@ -67,11 +67,7 @@ const SignIn = () => {
                     },
                     duration: 1500
                 });
-                
-                localStorage.setItem("name", data.name);
-
                 const username = data.name.replace(/\s+/g, '').toLowerCase().trim();
-                
                 router.push(`/dashboard/${username}`);
             }
         } catch (error) {
