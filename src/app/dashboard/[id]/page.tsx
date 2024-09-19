@@ -45,7 +45,7 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
     const [newPage, setNewPage] = useState<string>();
     const [command, setCommand] = useState<boolean>(false);
     const [rename, setRename] = useState<boolean>(false);
-    
+
     const pages = new Set([]);
 
     const form = useForm<z.infer<typeof profileSchema>>({
@@ -172,7 +172,7 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                     <div className=" h-[10vh] w-full absolute top-0 left-0 flex justify-center items-center">
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Button variant={'ghost'} className=" text-base font-semibold underline decoration-wavy decoration-red-600 gap-3 hover:bg-transparent">
+                                <Button variant={'ghost'} className=" text-center text-base font-semibold underline decoration-wavy decoration-red-600 gap-3 hover:bg-transparent">
                                     <Avatar>
                                         <AvatarImage src="https://github.com/shadcn.png" alt="icon" />
                                     </Avatar>
@@ -252,7 +252,7 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                                     <span className=" underline text-base font-mono">{newPage !== undefined && newPage?.length < 2 ? "New Page" : newPage}</span>
                                 )}
                             </section>
-                            <section className=" w-full h-[95vh] absolute top-[5vh] bg-slate-100 overflow-y-auto overflow-x-hidden" id="main">
+                            <section className=" w-full h-[95vh] absolute top-[5vh] bg-white overflow-y-auto overflow-x-hidden" id="main">
                                 {command &&
                                     <div className=" h-full w-full flex justify-center items-center">
                                         <CommandDialog open={command} onOpenChange={setCommand}>
@@ -262,7 +262,7 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                                                 <CommandGroup heading="Suggestions">
                                                     <CommandItem className=" gap-4">
                                                         <span className=" flex flex-row bg-green-100 p-1 rounded-md">
-                                                            <TokensIcon />&nbsp;+ k
+                                                            ctrl + k
                                                         </span>
                                                         <span>
                                                             Open Command
@@ -270,7 +270,7 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                                                     </CommandItem>
                                                     <CommandItem className=" gap-4">
                                                         <span className=" flex flex-row bg-green-100 p-1 rounded-md">
-                                                            <TokensIcon />&nbsp;+ s
+                                                            ctrl + s
                                                         </span>
                                                         <span>
                                                             Save Document
@@ -278,7 +278,7 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                                                     </CommandItem>
                                                     <CommandItem className=" gap-4">
                                                         <span className=" flex flex-row bg-green-100 p-1 rounded-md">
-                                                            <TokensIcon />&nbsp;+ f2
+                                                            ctrl + f2
                                                         </span>
                                                         <span>
                                                             Edit Name of Page
@@ -286,7 +286,6 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                                                     </CommandItem>
                                                 </CommandGroup>
                                                 <div className=" flex justify-center items-center">
-
                                                     <Button variant={'default'} className=" w-1/3 mt-2 mb-3" onClick={() => setCommand(false)}>
                                                         Okay
                                                     </Button>
@@ -295,6 +294,23 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                                         </CommandDialog>
                                     </div>
                                 }
+
+                                {/* Main Section */}
+
+                                <div className=" h-1/4 w-full overflow-hidden">
+                                    <Image src={'../banner.svg'} height={100} width={1200} priority alt={"banner"} />
+                                </div>
+
+                                <div className=" h-3/4 w-full overflow-y-auto overflow-x-hidden">
+                                    <div className=" h-fit w-full flex justify-center items-center mt-4">
+                                        <input className=" text-center text-6xl font-mono font-semibold border-none outline-none shadow-none h-fit max-w-fit bg-gray-50" onChange={(event: any) => {setNewPage(event.target.value) }} value={newPage} />
+                                    </div>
+                                    <p className=" text-center italic text-gray-400 mt-1">
+                                        press ctrl + k for command Pannel
+                                    </p>
+                                </div>
+
+
                             </section>
                         </main>
                         :
