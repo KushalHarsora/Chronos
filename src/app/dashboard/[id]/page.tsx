@@ -19,7 +19,7 @@ import {
     FormLabel,
     FormMessage
 } from '@/components/ui/form';
-import { FramerLogoIcon, GearIcon, PlusCircledIcon, TrashIcon } from "@radix-ui/react-icons"
+import { FramerLogoIcon, GearIcon, PlusCircledIcon, TokensIcon, TrashIcon } from "@radix-ui/react-icons"
 import axios, { AxiosResponse } from "axios"
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -29,6 +29,9 @@ import { toast } from "sonner"
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 
 const profileSchema = z.object({
     username: z.string()
@@ -36,16 +39,21 @@ const profileSchema = z.object({
 
 const Dashboard = ({ params }: { params: { id: string } }) => {
 
-    const form = useForm<z.infer<typeof profileSchema>>({
-        resolver: zodResolver(profileSchema),
-        defaultValues: {
-            username: ""
-        }
-    });
-
     const [name, setName] = useState<string>();
     const [email, setEmail] = useState<string>();
     const [page, setPage] = useState<boolean>(false);
+    const [newPage, setNewPage] = useState<string>();
+    const [command, setCommand] = useState<boolean>(false);
+    const [rename, setRename] = useState<boolean>(false);
+    
+    const pages = new Set([]);
+
+    const form = useForm<z.infer<typeof profileSchema>>({
+        resolver: zodResolver(profileSchema),
+        defaultValues: {
+            username: name
+        }
+    });
 
     useEffect(() => {
 
@@ -59,12 +67,42 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
         test()
     }, [])
 
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.ctrlKey && event.key === 'k') {
+                event.preventDefault();
+                setCommand((prev) => !prev);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.ctrlKey && event.key === 'F2') {
+                event.preventDefault();
+                setRename((prev) => !prev);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+
     const router = useRouter()
 
     // handle form submit
     const onSubmit = async (values: z.infer<typeof profileSchema>) => {
         try {
-            const body = {values, email: email}
+            const body = { values, email: email }
             const response: AxiosResponse = await axios.post('/auth/user', body, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -72,7 +110,7 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
             });
 
             const data = response.data;
-        
+
             if (response.status === 200) {
                 toast.success(data.message || "Update successful!", {
                     style: {
@@ -177,7 +215,7 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                         <div className=" h-fit w-full flex flex-col justify-start items-start px-6 gap-2 mt-4">
                             <Button variant={'link'} onClick={() => setPage(true)} className=" font-mono font-medium text-base hover:bg-transparent underline gap-2">
                                 <FramerLogoIcon />
-                                New Page
+                                {newPage != undefined ? newPage : "New Page"}
                             </Button>
                             <Button variant={'link'} onClick={() => { }} className=" font-mono font-medium text-base hover:bg-transparent underline gap-2">
                                 <GearIcon />
@@ -201,13 +239,68 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                 </section>
                 <section className=" h-screen w-3/4 absolute left-1/4 top-0 bg-white">
                     {page ?
-                        <div className=" h-full w-full">
-                            Page Init
-                        </div>
+                        <main className=" h-full w-full">
+                            <section className=" w-full h-[5vh] flex justify-start items-center border-b-[1px] px-2">
+                                {rename ? (
+                                    <input
+                                        type="text"
+                                        value={newPage}
+                                        onChange={(event: any) => setNewPage(event.target.value)}
+                                        className=" bg-green-100 rounded-md px-2 outline-none"
+                                    />
+                                ) : (
+                                    <span className=" underline text-base font-mono">{newPage !== undefined && newPage?.length < 2 ? "New Page" : newPage}</span>
+                                )}
+                            </section>
+                            <section className=" w-full h-[95vh] absolute top-[5vh] bg-slate-100 overflow-y-auto overflow-x-hidden" id="main">
+                                {command &&
+                                    <div className=" h-full w-full flex justify-center items-center">
+                                        <CommandDialog open={command} onOpenChange={setCommand}>
+                                            <CommandInput placeholder="Type a command or search..." />
+                                            <CommandList className=" gap-2">
+                                                <CommandEmpty>No results found.</CommandEmpty>
+                                                <CommandGroup heading="Suggestions">
+                                                    <CommandItem className=" gap-4">
+                                                        <span className=" flex flex-row bg-green-100 p-1 rounded-md">
+                                                            <TokensIcon />&nbsp;+ k
+                                                        </span>
+                                                        <span>
+                                                            Open Command
+                                                        </span>
+                                                    </CommandItem>
+                                                    <CommandItem className=" gap-4">
+                                                        <span className=" flex flex-row bg-green-100 p-1 rounded-md">
+                                                            <TokensIcon />&nbsp;+ s
+                                                        </span>
+                                                        <span>
+                                                            Save Document
+                                                        </span>
+                                                    </CommandItem>
+                                                    <CommandItem className=" gap-4">
+                                                        <span className=" flex flex-row bg-green-100 p-1 rounded-md">
+                                                            <TokensIcon />&nbsp;+ f2
+                                                        </span>
+                                                        <span>
+                                                            Edit Name of Page
+                                                        </span>
+                                                    </CommandItem>
+                                                </CommandGroup>
+                                                <div className=" flex justify-center items-center">
+
+                                                    <Button variant={'default'} className=" w-1/3 mt-2 mb-3" onClick={() => setCommand(false)}>
+                                                        Okay
+                                                    </Button>
+                                                </div>
+                                            </CommandList>
+                                        </CommandDialog>
+                                    </div>
+                                }
+                            </section>
+                        </main>
                         :
                         <div className=" h-full w-full flex flex-col justify-center items-center">
                             <Image src={'../page.svg'} height={400} width={500} priority alt={"page"} />
-                            <Button className=" gap-2 text-base py-4" variant={'default'} onClick={() => { setPage(!page) }}>
+                            <Button className=" gap-2 text-base py-4" variant={'default'} onClick={() => { setPage(!page); setNewPage("New Page"); }}>
                                 <PlusCircledIcon />
                                 New Page
                             </Button>
