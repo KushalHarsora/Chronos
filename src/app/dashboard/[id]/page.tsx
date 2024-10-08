@@ -29,8 +29,7 @@ import { toast } from "sonner"
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 
 
 const profileSchema = z.object({
@@ -54,6 +53,53 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
             username: name
         }
     });
+
+    const handleKeyboardEvent = (event: KeyboardEvent) => {
+
+        const component = document.activeElement as HTMLElement;
+
+        if (event.ctrlKey && event.key == 'u') {
+            event.preventDefault();
+            if (component.classList.contains("underline")) {
+                component.classList.remove("underline")
+            } else {
+                component.classList.add("underline")
+            } 
+        } else if (event.ctrlKey && event.key == 'b') {
+            event.preventDefault();
+            if (component.classList.contains("font-bold")) {
+                console.log("yes")
+                component.classList.remove("font-bold")
+            } else {
+                console.log("no")
+                component.classList.add("font-bold")
+            } 
+        } else if (event.ctrlKey && event.key === 'p') {
+            event.preventDefault();
+            appendParagraph();
+        }
+    }
+
+    const appendParagraph = () => {
+        const mainDiv = document.getElementById("main");
+
+        if (mainDiv) {
+            const newParagraph = document.createElement("p");
+            newParagraph.setAttribute("contenteditable", "true");
+            newParagraph.classList.add("text-lg", "m-2", "p-2", "border", "rounded", "border-0", "bg-green-50");
+            newParagraph.innerText = "New paragraph...";
+            mainDiv.appendChild(newParagraph);
+            newParagraph.focus();
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyboardEvent);
+        return () => {
+            window.removeEventListener('keydown', handleKeyboardEvent);
+        };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
 
@@ -166,7 +212,7 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
 
     return (
         <React.Fragment>
-            <main className=" h-screen w-screen flex justify-center items-center">
+            <main className=" h-screen w-screen flex justify-center items-center overflow-hidden">
                 {/* Left Section */}
                 <section className=" h-screen w-1/4 absolute left-0 top-0 bg-slate-50 flex flex-col justify-center items-center">
                     <div className=" h-[10vh] w-full absolute top-0 left-0 flex justify-center items-center">
@@ -239,7 +285,7 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                 </section>
                 <section className=" h-screen w-3/4 absolute left-1/4 top-0 bg-white">
                     {page ?
-                        <main className=" h-full w-full">
+                        <main className=" h-full w-full overflow-hidden">
                             <section className=" w-full h-[5vh] flex justify-start items-center border-b-[1px] px-2">
                                 {rename ? (
                                     <input
@@ -252,48 +298,7 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                                     <span className=" underline text-base font-mono">{newPage !== undefined && newPage?.length < 2 ? "New Page" : newPage}</span>
                                 )}
                             </section>
-                            <section className=" w-full h-[95vh] absolute top-[5vh] bg-white overflow-y-auto overflow-x-hidden" id="main">
-                                {command &&
-                                    <div className=" h-full w-full flex justify-center items-center">
-                                        <CommandDialog open={command} onOpenChange={setCommand}>
-                                            <CommandInput placeholder="Type a command or search..." />
-                                            <CommandList className=" gap-2">
-                                                <CommandEmpty>No results found.</CommandEmpty>
-                                                <CommandGroup heading="Suggestions">
-                                                    <CommandItem className=" gap-4">
-                                                        <span className=" flex flex-row bg-green-100 p-1 rounded-md">
-                                                            ctrl + k
-                                                        </span>
-                                                        <span>
-                                                            Open Command
-                                                        </span>
-                                                    </CommandItem>
-                                                    <CommandItem className=" gap-4">
-                                                        <span className=" flex flex-row bg-green-100 p-1 rounded-md">
-                                                            ctrl + s
-                                                        </span>
-                                                        <span>
-                                                            Save Document
-                                                        </span>
-                                                    </CommandItem>
-                                                    <CommandItem className=" gap-4">
-                                                        <span className=" flex flex-row bg-green-100 p-1 rounded-md">
-                                                            ctrl + f2
-                                                        </span>
-                                                        <span>
-                                                            Edit Name of Page
-                                                        </span>
-                                                    </CommandItem>
-                                                </CommandGroup>
-                                                <div className=" flex justify-center items-center">
-                                                    <Button variant={'default'} className=" w-1/3 mt-2 mb-3" onClick={() => setCommand(false)}>
-                                                        Okay
-                                                    </Button>
-                                                </div>
-                                            </CommandList>
-                                        </CommandDialog>
-                                    </div>
-                                }
+                            <section className=" w-full h-fit absolute top-[5vh] bg-white overflow-y-auto overflow-x-hidden" id="main">
 
                                 {/* Main Section */}
 
@@ -302,11 +307,60 @@ const Dashboard = ({ params }: { params: { id: string } }) => {
                                 </div>
 
                                 <div className=" h-3/4 w-full overflow-y-auto overflow-x-hidden">
-                                    <div className=" h-fit w-full flex justify-center items-center mt-4">
-                                        <input className=" text-center text-6xl font-mono font-semibold border-none outline-none shadow-none h-fit max-w-fit bg-gray-50" onChange={(event: any) => {setNewPage(event.target.value) }} value={newPage} />
+                                    {command &&
+                                        <div className=" h-full w-full flex justify-center items-center">
+                                            <CommandDialog open={command} onOpenChange={setCommand}>
+                                                <CommandInput placeholder="Type a command or search..." />
+                                                <CommandList className=" gap-2">
+                                                    <CommandEmpty>No results found.</CommandEmpty>
+                                                    <CommandGroup heading="Suggestions">
+                                                        <CommandItem className=" gap-4">
+                                                            <span className=" flex flex-row bg-green-100 p-1 rounded-md">
+                                                                ctrl + k
+                                                            </span>
+                                                            <span>
+                                                                Open Command
+                                                            </span>
+                                                        </CommandItem>
+                                                        <CommandItem className=" gap-4">
+                                                            <span className=" flex flex-row bg-green-100 p-1 rounded-md">
+                                                                ctrl + s
+                                                            </span>
+                                                            <span>
+                                                                Save Document
+                                                            </span>
+                                                        </CommandItem>
+                                                        <CommandItem className=" gap-4">
+                                                            <span className=" flex flex-row bg-green-100 p-1 rounded-md">
+                                                                ctrl + f2
+                                                            </span>
+                                                            <span>
+                                                                Edit Name of Page
+                                                            </span>
+                                                        </CommandItem>
+                                                        <CommandItem className=" gap-4">
+                                                            <span className=" flex flex-row bg-green-100 p-1 rounded-md">
+                                                                ctrl + p
+                                                            </span>
+                                                            <span>
+                                                                Create a Paragraph
+                                                            </span>
+                                                        </CommandItem>
+                                                    </CommandGroup>
+                                                    <div className=" flex justify-center items-center">
+                                                        <Button variant={'default'} className=" w-1/3 mt-2 mb-3" onClick={() => setCommand(false)}>
+                                                            Okay
+                                                        </Button>
+                                                    </div>
+                                                </CommandList>
+                                            </CommandDialog>
+                                        </div>
+                                    }
+                                    <div className=" h-fit w-full flex flex-col justify-center items-center mt-4">
+                                        <input className=" text-center text-7xl font-mono font-bold border-none outline-none shadow-none h-fit w-fit bg-slate-50" onChange={(event: any) => { setNewPage(event.target.value) }} value={newPage} />
                                     </div>
                                     <p className=" text-center italic text-gray-400 mt-1">
-                                        press ctrl + k for command Pannel
+                                        press ctrl + k to open Command Pannel
                                     </p>
                                 </div>
 
