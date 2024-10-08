@@ -70,7 +70,7 @@ export default function Home() {
           <h1 className=" text-4xl font-bold max-lg:text-3xl">
             Welcome to <span className=" font-extrabold underline">Chronos</span>.
           </h1>
-          <TextGenerateEffect className=" flex justify-center items-center px-4 max-lg:text-sm" words={words} />
+          <TextGenerateEffect className=" flex justify-center items-center px-20 max-lg:text-sm" words={words} />
           <Button
             className=" gap-2"
             onClick={() => { router.push('/sign-up') }}
