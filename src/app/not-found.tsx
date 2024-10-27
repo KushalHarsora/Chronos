@@ -5,7 +5,7 @@ import React from "react";
 import Image from "next/image";
 import { Button } from "../components/ui/button";
 
-const NotFound = async () => {
+const NotFound = () => {
 
     const router = useRouter();
 
