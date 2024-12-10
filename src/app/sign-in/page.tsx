@@ -1,15 +1,15 @@
 'use client'
 
+/* UI Components import */
+
 import { Button } from "@/components/ui/button"
 import { ArrowRightIcon, HamburgerMenuIcon } from "@radix-ui/react-icons"
-import { useRouter } from "next/navigation"
-import React from "react"
 import {
     Card,
     CardContent,
     CardHeader,
     CardTitle
-} from '@/components/ui/card';
+} from '@/components/ui/card'
 import {
     Form,
     FormControl,
@@ -17,16 +17,22 @@ import {
     FormItem,
     FormLabel,
     FormMessage
-} from '@/components/ui/form';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '@/components/ui/input';
-import Link from 'next/link';
-import axios, { AxiosResponse } from 'axios';
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+
+/* System Components import */
+
+import { useRouter } from "next/navigation"
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import Link from 'next/link'
+import axios, { AxiosResponse } from 'axios'
+import React from "react"
+
 
 const loginSchema = z.object({
     email: z.string().email(),
@@ -39,7 +45,7 @@ const loginSchema = z.object({
 
 const SignIn = () => {
 
-    const router = useRouter()
+    const router = useRouter();
 
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
@@ -67,8 +73,7 @@ const SignIn = () => {
                     },
                     duration: 1500
                 });
-                const username = data.name.replace(/\s+/g, '').toLowerCase().trim();
-                router.push(`/dashboard/${username}`);
+                router.push(`/dashboard`);
             }
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
@@ -210,7 +215,7 @@ const SignIn = () => {
                                             Don&apos;t have an account?
                                         </span>
                                         <span>
-                                            <Link href={'/sign-up'} className=' font-bold text-gray-700 underline'>
+                                            <Link href={'/sign-up'} className=' font-bold text-gray-700 underline decoration-wavy decoration-slate-400'>
                                                 Sign up
                                             </Link>
                                         </span>

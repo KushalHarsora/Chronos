@@ -1,15 +1,15 @@
 'use client'
 
+/* UI Components import */
+
 import { Button } from "@/components/ui/button"
 import { ArrowRightIcon, HamburgerMenuIcon } from "@radix-ui/react-icons"
-import { useRouter } from "next/navigation"
-import React from "react"
 import {
     Card,
     CardContent,
     CardHeader,
     CardTitle
-} from '@/components/ui/card';
+} from '@/components/ui/card'
 import {
     Form,
     FormControl,
@@ -17,16 +17,22 @@ import {
     FormItem,
     FormLabel,
     FormMessage
-} from '@/components/ui/form';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '@/components/ui/input';
-import Link from 'next/link';
-import axios, { AxiosResponse } from 'axios';
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+
+/* System Components import */
+
+import { useRouter } from "next/navigation"
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import Link from 'next/link'
+import axios, { AxiosResponse } from 'axios'
+import React from "react"
+
 
 const registerSchema = z.object({
     username: z.string().min(2, {
@@ -197,7 +203,7 @@ const SignUp = () => {
                                             Already have an account?
                                         </span>
                                         <span>
-                                            <Link href={'/sign-in'} className=' font-bold text-gray-700 underline'>
+                                            <Link href={'/sign-in'} className=' font-bold text-gray-700 underline decoration-wavy decoration-slate-400'>
                                                 Sign in
                                             </Link>
                                         </span>
