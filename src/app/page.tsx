@@ -42,8 +42,8 @@ const Home = () => {
           <div className=" w-fit h-fit overflow-hidden px-6 rounded-2xl max-lg:overflow-hidden max-lg:mt-6">
             <Image
               src={'logo.svg'}
-              height={400}
-              width={500}
+              height={600}
+              width={650}
               priority
               alt={"logo"}
             />
