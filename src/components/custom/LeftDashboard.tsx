@@ -10,9 +10,13 @@ import { ArchiveIcon, GearIcon, MagnifyingGlassIcon, PlusCircledIcon, PlusIcon, 
 /* System Components import */
 
 import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 
 
 const LeftDashboard = () => {
+
+    const router = useRouter();
 
     const [page, setPage] = useState<{ [key: string]: { name: string, body: {} } }>({});
     const [count, setCount] = useState<number>(0);
@@ -21,12 +25,14 @@ const LeftDashboard = () => {
     useEffect(() => {
         const getName = async () => {
             const response: AxiosResponse = await axios.get("/auth/user");
+            if (response.data.message) {
+                router.push("/sign-in");
+            }
             setName(response.data.username);
-            console.log(name);
         }
 
         getName();
-    }, [name])
+    }, [name, router]);
 
     const addPage = () => {
         const newPageId = `page${count}`;
@@ -40,6 +46,30 @@ const LeftDashboard = () => {
         }));
 
         setCount(prevCount => prevCount + 1);
+    }
+
+    const handleLogout = async () => {
+        const response: AxiosResponse = await axios.get("auth/sign-out");
+        if (response.status === 200) {
+            toast.success(response.data.message, {
+                style: {
+                    "backgroundColor": "#D5F5E3",
+                    "color": "black",
+                    "border": "none"
+                },
+                duration: 1500
+            });
+            router.push("/sign-in");
+        } else {
+            toast.error(response.data.message, {
+                style: {
+                    "backgroundColor": "#FADBD8",
+                    "color": "black",
+                    "border": "none"
+                },
+                duration: 2500
+            })
+        }
     }
 
     return (
@@ -132,7 +162,7 @@ const LeftDashboard = () => {
                 <Button
                     variant={'destructive'}
                     className=' w-3/4 font-bold'
-                    onClick={() => { }}
+                    onClick={handleLogout}
                 >
                     Sign out
                 </Button>
